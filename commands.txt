@@ -1,0 +1,113 @@
+
+CREATE DATABASE FitTrackWellnessCenter;
+USE FitTrackWellnessCenter;
+
+
+CREATE TABLE Departments (
+    DepartmentID INT PRIMARY KEY AUTO_INCREMENT,
+    DepartmentName VARCHAR(100) NOT NULL,
+    Location VARCHAR(200)
+);
+
+
+CREATE TABLE Trainers (
+    TrainerID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    DepartmentID INT,
+    Email VARCHAR(100) UNIQUE,
+    Phone VARCHAR(20),
+    HireDate DATE,
+    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID)
+);
+
+
+CREATE TABLE Members (
+    MemberID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    DateOfBirth DATE,
+    Gender ENUM('Male', 'Female', 'Other'),
+    Email VARCHAR(100) UNIQUE,
+    Phone VARCHAR(20),
+    JoinDate DATE
+);
+
+
+CREATE TABLE TrainingRooms (
+    RoomID INT PRIMARY KEY AUTO_INCREMENT,
+    RoomName VARCHAR(100) NOT NULL,
+    Capacity INT,
+    DepartmentID INT,
+    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID)
+);
+
+
+CREATE TABLE Subscriptions (
+    SubscriptionID INT PRIMARY KEY AUTO_INCREMENT,
+    MemberID INT,
+    RoomID INT,
+    StartDate DATE,
+    EndDate DATE,
+    SubscriptionType VARCHAR(50),
+    FOREIGN KEY (MemberID) REFERENCES Members(MemberID),
+    FOREIGN KEY (RoomID) REFERENCES TrainingRooms(RoomID)
+);
+
+
+CREATE TABLE Appointments (
+    AppointmentID INT PRIMARY KEY AUTO_INCREMENT,
+    MemberID INT,
+    TrainerID INT,
+    RoomID INT,
+    AppointmentDate DATETIME,
+    Duration INT, -- in minutes
+    FOREIGN KEY (MemberID) REFERENCES Members(MemberID),
+    FOREIGN KEY (TrainerID) REFERENCES Trainers(TrainerID),
+    FOREIGN KEY (RoomID) REFERENCES TrainingRooms(RoomID)
+);
+
+
+CREATE TABLE Supplements (
+    SupplementID INT PRIMARY KEY AUTO_INCREMENT,
+    SupplementName VARCHAR(100) NOT NULL,
+    Description TEXT,
+    Price DECIMAL(10,2)
+);
+
+
+CREATE TABLE TrainerRecommendedSupplements (
+    TrainerID INT,
+    SupplementID INT,
+    PRIMARY KEY (TrainerID, SupplementID),
+    FOREIGN KEY (TrainerID) REFERENCES Trainers(TrainerID),
+    FOREIGN KEY (SupplementID) REFERENCES Supplements(SupplementID)
+);
+
+
+CREATE TABLE AdministrativeStaff (
+    StaffID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Position VARCHAR(100),
+    Email VARCHAR(100) UNIQUE,
+    Phone VARCHAR(20)
+);
+
+
+CREATE INDEX idx_member_dob ON Members(DateOfBirth);
+CREATE INDEX idx_appointment_date ON Appointments(AppointmentDate);
+CREATE INDEX idx_trainer_department ON Trainers(DepartmentID);
+
+
+INSERT INTO Departments (DepartmentName, Location) VALUES 
+('Musculation', 'Ground Floor'),
+('Cardio', 'First Floor'),
+('Yoga', 'Second Floor'),
+('Swimming', 'Basement');
+
+INSERT INTO Trainers (FirstName, LastName, DepartmentID, Email, Phone, HireDate) VALUES 
+('John', 'Doe', 1, 'john.doe@fittrack.com', '1234567890', '2023-01-15');
+
+INSERT INTO Members (FirstName, LastName, DateOfBirth, Gender, Phone) VALUES 
+('Alex', 'Johnson', '1990-07-15', 'Male', '1234567890');
