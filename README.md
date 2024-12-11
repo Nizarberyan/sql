@@ -1,6 +1,3 @@
-Here’s a README file for the "FitTrack Wellness Center" database:
-
----
 
 # FitTrack Wellness Center Database
 
