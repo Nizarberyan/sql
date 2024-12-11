@@ -76,13 +76,7 @@ CREATE TABLE Supplements (
 );
 
 
-CREATE TABLE TrainerRecommendedSupplements (
-    TrainerID INT,
-    SupplementID INT,
-    PRIMARY KEY (TrainerID, SupplementID),
-    FOREIGN KEY (TrainerID) REFERENCES Trainers(TrainerID),
-    FOREIGN KEY (SupplementID) REFERENCES Supplements(SupplementID)
-);
+
 
 
 CREATE TABLE AdministrativeStaff (
